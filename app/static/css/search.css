@@ -1,0 +1,284 @@
+/**
+ * Copyright 2014 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *  @author:  Stephen Nicholls, March 10, 2014
+ */
+
+@import url("search-rightCol.css");
+html {
+    height: 100%
+}
+body {
+    height: 100%;
+    margin: 0;
+    padding: 20px;
+    /*background-image: url("https://raw.githubusercontent.com/youtube/geo-search-tool/master/css/jt_background.png");*/
+    /*background: url('http://play.vidyard.com/mdLEDZ5KGg6JmNOPn4_n-A.jpg') no-repeat left bottom;*/
+    /*background: url('http://p.motionelements.com/stock-video/business/me5503625-scan-pixelated-world-map-loop-background-hd-a0120.jpg');*/
+    /*background: url('https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQn6BJfH1Vk4beieEjzC0faeWexbCTuRk0Mi-rKZ-Qo2ccBSuka');*/
+/*    background-color: darkblue;*/
+	background: black url("https://media.giphy.com/media/2PpVrsFxxeSPe/giphy.gif") no-repeat center left 100px;
+	background-size: 800px 500px;
+	background-color: #f1f1f1;
+/*    background-size: cover;*/
+    font-family: Arial, sans-serif;
+}
+a:link {
+    /*color: #ddf;*/
+    color: #2c98ea;
+    font-size: 16px;
+}
+a:visited {
+    color: #aaa
+}
+a:hover {
+    color: #00c
+}
+a {
+    display: inline-block;
+    max-width: 300px;
+}
+
+select {
+    background: #f1f1f1 !important;
+    /*color:#FFF;*/
+    color: #919191;
+    text-shadow:0 1px 0 rgba(0,0,0,0.4);
+}
+/*************** Left Column *************************/
+
+#leftCol {
+    display: inline-block;
+    width: 68%;
+    /*background-color: lightblue;*/
+    max-height: 100%;
+    background-color: white;
+    border-radius: 5px;
+}
+#mainSearchForm {
+    /*border: 2px solid black;*/
+    width: 100%;
+    /*background-color: green;*/
+    vertical-align: top;
+}
+#topSearchDisplay {
+    /*color: white;*/
+    color: #919191;
+    margin: 20px;
+    padding: 5px;
+    width: 90%;
+    font-size: 20px;
+    /*border: 2px solid red;*/
+    /*display: block;*/
+}
+div#searchDisplay {
+    /*background-color: pink;*/
+}
+#searchDisplay div {
+    display: inline-block;
+}
+#searchDisplay label {
+    margin: 10px;
+}
+
+/**************** Time Selection with custom range *********/
+/*#timeWindow {
+    float: left;
+    height: 50px;
+    width: 200px;
+    border: 1px solid black;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius: 10px;
+    font-size: 18px;
+    padding: 10px;
+    margin: 20px 0px 10px 0px;
+}*/
+.ui-datepicker, .ui-datepicker span{
+    width: 15%;
+    background: #333;
+    border: 1px solid #555;
+    color: #EEE;
+    font-size: 1.4em;;
+}
+
+
+/*#startDate {
+    height: 20px;
+    width: 40%;
+    border: 1px solid black;
+    font-size: 14px;
+}
+#endDate {
+    height: 20px;
+    width: 40%;
+    border: 1px solid black;
+    font-size: 14px;
+}*/
+
+/************* ADVANCED SEARCH *********************/
+#searchFiltersDisplay {
+    /*color: white;*/
+    color: #919191;
+    border-width: thin;
+    border-style: solid;
+    margin: 20px;
+    padding: 5px;
+    border-radius: 10px 10px 10px 10px;
+    width: 90%;
+    font-size: 20px;
+
+}
+#keywordsRadiusChannels{
+    margin-bottom: 20px;
+}
+
+/*#searchFiltersDisplay table {
+    max-width: 90%;
+    background-color: blue;
+}*/
+/*#query {
+    height: 20px;
+    border: 1px solid black;
+    font-size: 14px;
+}*/
+/*#locRadius {
+    height: 20px;
+    border: 1px solid black;
+    font-size: 14px;
+}*/
+/*#newsChannelFilter {
+    height: 20px;
+    border: 1px solid black;
+    font-size: 14px;
+}*/
+/*#channelList {
+    height: 20px;
+    border: 1px solid black;
+    font-size: 14px;
+}*/
+
+/************* ADVANCED SEARCH *********************/
+/*#search-button {
+    float: left;
+    background-image: linear-gradient(#8A8988, #636362);
+    border-radius: 10px 10px 10px 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    height: 50px;
+    width: 100%;
+    font-size: 18px;
+    color: white;
+}*/
+/*#search-button:hover {
+    background-image: linear-gradient(#636362, #8A8988);
+}
+#search-button:active {
+    background-image: linear-gradient(#8A8988, #636362);
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+}*/
+
+/**************   RESULTS ******************/
+#resultsDiv {
+    /*border: 2px solid blue;*/
+    width: 100%;
+    /*background-color: lightgreen;*/
+    padding: 0 20px;
+    max-height: 90%;
+}
+
+#searchResultCount {
+    margin: 20px 0;
+    color: #919191;
+    /*background-color: black;*/
+    font-size: 1.5em;
+    /*float: right;*/
+}
+/*.td-results {
+    width: 70%;
+}*/
+.video-content {
+    width: 70%;
+    float: left;
+    position: relative;
+    /*border-width: thin;*/
+    /*border-style: solid;*/
+    margin: 30px;
+    padding: 5px;
+    border-radius: 10px 10px 10px 10px;
+    color: #919191;
+}
+
+#video-container {
+    max-height: 800px;
+    overflow: scroll;
+    width: 60%;
+    /*border: 5px solid red;*/
+    /*background-color: blue;*/
+    padding: 0 10px;
+    display: inline-block;
+    background-color: #e5e5e5;
+}
+
+#map-canvas {
+    width: 400px;
+    height: 400px;
+    position: relative;
+    border-width: thin;
+    border-style: solid;
+    margin: 20px;
+    padding: 5px;
+    border-radius: 10px 10px 10px 10px;
+    color: white;
+    display: inline-block;
+    vertical-align: top;
+}
+.showErrors {
+    margin: 20px;
+    color: red;
+}
+
+/*********** ABOUT - REMOVED ************************/
+
+/*#aboutDisplay {
+    color: white;
+    margin: 14px;
+    padding: 5px;
+    width: 1050px;
+}
+#aboutDisplay> a:link {
+    color: #fff;
+}
+.aboutPageBold {
+    color: #FFFFCC;
+    font-weight: bold;
+    font-size: 18px;
+}
+.aboutPageHeader {
+    color: #6699FF;
+    font-size: 14px;
+}
+.tooltip {
+    display: none;
+    font-size: 12px;
+    height: 70px;
+    width: 160px;
+    padding: 25px;
+    color: #eee;
+}*/

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>GeoTube</title>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/css/search.css">
+    <script>
+        var userID = "{{ id }}";
+    </script>
+    <script src="static/js/search.js"></script>
+</head>
+<!--
+Copyright 2014 Google Inc. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+This code is an example implementation of how to implement YouTube geo-search
+search and search filters via established APIs.  The application itself is directed toward the use
+case of journalists trying to discover citizen journalism on YouTube.   It integrates with the Google Maps API to plot
+the upload location of geo-tagged video results.
+Author:  Stephen Nicholls, March 10, 2014
+-->
+
+<body>
+    <div id="leftCol">
+        <div id='mainSearchForm'>
+            <form id="jt_search_form" action="javascript:clickedSearchButton()" class="form-inline">
+
+                <div id="topSearchDisplay">
+
+                    <div id="searchDisplay">
+                        <div class="form-group">
+                            <label for="searchLocation">Location:</label>
+                            <input id="searchLocation" type="text" class="form-control" placeholder='e.g. City, Intersection, Address' value=''>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pwd">Time Frame:</label>
+                            <select id='timeWindow' onChange='displayCustomRangeSection()'>
+                                <option value="any" selected="selected">Any Time</option>
+                                <option value="hour">Past Hour</option>
+                                <option value="3hours">Past 3 Hours</option>
+                                <option value="6hours">Past 6 Hours</option>
+                                <option value="9hours">Past 9 Hours</option>
+                                <option value="12hours">Past 12 Hours</option>
+                                <option value="24hours">Past 24 Hours</option>
+                                <option value="week">Past Week</option>
+                                <option value="30days">Past 30 days</option>
+                                <option value="year">Past Year</option>
+                                <option value='custom_range'>Custom Range</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" class="btn btn-default">Submit</button>
+
+                        <div id="customRange" class="form-group">
+                            <label for="startDate">Start Date:</label>
+                            <input id='startDate' type="text" class="form-control" placeholder="mm-dd-yyyy">
+                            <label for="endDate">End Date:</label>
+                            <input id='endDate' type="text" class="form-control" placeholder="mm-dd-yyyy">
+                        </div>
+                    </div>
+                    <!-- END searchDisplay DIV -->
+                    <a id="showFiltersLink" href="javascript:showSearchFilters();">Show Advanced Search</a>
+                    <a id="hideFiltersLink" href="javascript:hideSearchFilters();">Hide Advanced Search</a>
+                </div>
+                <!-- END topSearchDisplay -->
+
+                <div id="showErrorsContainer">
+                    <div class="showErrors"></div>
+                </div>
+
+                <div id="searchFiltersDisplay">
+                    <!-- Keywords Radius and Channels -->
+                    <div id="keywordsRadiusChannels">
+                        <label for="query">Keywords:</label>
+                        <input id='query' value='' type="text" class="form-control" placeholder=' e.g. fire, explosion' title='Enter keywords here to narrow the search results further'>
+
+                        <label for="endDate">Radius:</label>
+                        <select id='locRadius' title='Enter the location radius to search on'>
+                            <option value="">None</option>
+                            <option value="1km">1km</option>
+                            <option value="10km" selected="selected">10km</option>
+                            <option value="50km">50km</option>
+                            <option value="100km">100km</option>
+                            <option value="500km">500km</option>
+                            <option value="1000km">1000km</option>
+                        </select>
+
+                        <label for="channelList">Channels to Search On:</label>
+                        <input id='channelList' value='' type="text" class="form-control" placeholder='Enter comma separated list of channels to search exclusively on' title='Enter comma separated list of channels to search exclusively on'>
+                    </div>
+                    <!-- End Keywords Radius and Channels -->
+
+                    <div>
+                        <input type="checkbox" id="creativeCommonsOnly" value="true" title='Show only results that are under the Creative Commons liscense.'>
+                        <abbr title='Show only results that are under the Creative Commons liscense.'>Creative Commons Only Results</abbr>
+
+                        <input type="checkbox" id="embedOnly" value="true" 'Show only results that are embeddable in other sites'>
+                        <abbr title='Show only results that are embeddable in other sites'>Embeddable Only Results</abbr></td>
+
+                        <input type="checkbox" id="liveOnly" value="true" title='Show only live stream results'>
+                        <abbr title='Show only live stream results'>Live Only Results</abbr>
+                    </div>
+                    <!-- END CHECKBOXES -->
+                    <!-- <table>
+                        <tr>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>Keywords
+                            </td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>Radius
+                            </td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>Channels to Search On
+                            </td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>
+                                <input id='query' value='' type="text" placeholder=' e.g. fire, explosion' title='Enter keywords here to narrow the search results further'>
+                            </td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>
+                                <select id='locRadius' title='Enter the location radius to search on'>
+                                    <option value="">None</option>
+                                    <option value="1km">1km</option>
+                                    <option value="10km" selected="selected">10km</option>
+                                    <option value="50km">50km</option>
+                                    <option value="100km">100km</option>
+                                    <option value="500km">500km</option>
+                                    <option value="1000km">1000km</option>
+                                </select>
+                            </td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>
+                                <input id='channelList' value='' type="text" width="100" title='Enter comma separated list of channels to search exclusively on'>
+                            </td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>
+                                <div id="creativeCommonsText">
+                                    <input type="checkbox" id="creativeCommonsOnly" value="true" title='Show only results that are under the Creative Commons liscense.'>
+                                    <abbr title='Show only results that are under the Creative Commons liscense.'>Creative Commons Only
+                  Results</abbr></div>
+                            </td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>
+                                <input type="checkbox" id="embedOnly" value="true" 'Show only results that are embeddable in other sites'>
+                                <abbr title='Show only results that are embeddable in other sites'>Embeddable Only Results</abbr></td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td>
+                                <input type="checkbox" id="liveOnly" value="true" title='Show only live stream results'>
+                                <abbr title='Show only live stream results'>Live Only Results</abbr></td>
+                        </tr>
+                    </table> -->
+                </div>
+                <!-- END searchFiltersDisplay -->
+            </form>
+        </div>
+        <!-- END mainSearchForm -->
+
+        <!--- RESULTS DIV ------------------------------>
+        <div id="resultsDiv">
+            <div id='searchResultCountContainer'>
+                <div id='searchResultCount'>
+                </div>
+            </div>
+            <div>
+                <div id="video-container">
+                    <table id="tableOfVideoContentResults"></table>
+                </div>
+                <div id="map-canvas"></div>
+            </div>
+
+            <!-- <table>
+                <tr>
+                    <td colspan='2' align="right">
+                        <div id='searchResultCountContainer'>
+                            <div id='searchResultCount'></div>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="td-results">
+                        <div id="video-container">
+                            <table id="tableOfVideoContentResults"></table>
+                        </div>
+                    </td>
+
+                    <td valign='top' class="td-results">
+                        <div id="map-canvas"></div>
+                    </td>
+                </tr>
+            </table> -->
+        </div>
+        <!-- END resultsDiv -->
+    </div>
+    <!-- END leftCol -->
+
+    <div id="rightCol">
+        <!-- START content -->
+        <div id='content'>
+            <ul class='switcher'>
+                <li><a href='#0'>Sign In</a></li>
+                <li><a href='#0'>New Account</a></li>
+            </ul>
+
+            <div id='login'>
+                <form class='form' action="/login" method="post">
+                    <p class="fieldset">
+                        <label class="image-replace cd-email" for="signin-email">
+                        </label>
+                        <input class="full-width has-padding has-border" id="signin-email" type="email" placeholder="E-mail" name="email">
+                    </p>
+
+                    <p class="fieldset">
+                        <label class="image-replace cd-password" for="signin-password">Password</label>
+                        <input class="full-width has-padding has-border" id="signin-password" type="password"  placeholder="Password" name="pw">
+                    </p>
+                            
+                    <p class='fieldset'>
+                        <input class='full-width' type='submit' value='Login'>
+                    </p>
+                    <p style="text-align:center">or</p>
+                    <p class="fieldset">
+                        <button class='full-width' style="background:darkblue" onclick="login()" type="button">Sign in with Facebook</button>
+                    </p>
+                </form>
+            </div>
+
+            <div id='signup'>
+                <form class='form' action="/register" method="post">
+                    <p class="fieldset">
+                        <label class="image-replace cd-username" for="signup-username">Username</label>
+                        <input class="full-width has-padding has-border" id="signup-username" type='text' placeholder="Name" name="name">
+                    </p>
+
+                    <p class="fieldset">
+                        <label class="image-replace cd-email" for="signup-email">E-mail</label>
+                        <input class="full-width has-padding has-border" id="signup-email" type="email" placeholder="E-mail" name="email">
+                    </p>
+
+                    <p class="fieldset">
+                        <label class="image-replace cd-password" for="signup-password">Password</label>
+                        <input class="full-width has-padding has-border" id="signup-password" type="password" placeholder="Password" name="pw">
+                    </p>
+
+                    <p class='fieldset'>
+                        <input class='full-width has-padding' type='submit' value='Create Account'>
+                    </p>
+
+                    <p style="text-align:center">or</p>
+                    <p class="fieldset">
+                        <button class='full-width' style="background:darkblue" onclick="register()" type="button">Sign in with Facebook</button>
+                    </p>
+                    <!-- <button id='favorite_switch' type='button'>Switch</button> -->
+                </form>
+            </div>
+        </div>
+        <!-- END content -->
+        <div id="loginAndFavourites">
+            <div id='addFavForm'>
+                <form action='/search/add_favourite' method='POST' id='add_favourite'>
+                    <!-- <form id='add_favourite'> -->
+                    <table>
+                        <tr>
+                            <td>
+                                <label for='fav_name'>Favourite Name:</label>
+                            </td>
+                            <td>
+                                <input type='text' name='fav_name' id='fav_name' placeholder='Name you search' class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for='fav_description'>Add description:</label>
+                            </td>
+                            <td>
+                                <textarea name='fav_description' id='fav_description' placeholder='Add description' class="form-control" /></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type='submit' class="btn btn-success" value='add' />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <!-- END ADD FAV FORM -->
+            </div>
+            <!-- END addFavForm -->
+            <div id='favTable-wrapper'>
+                <div id='favTable-scroll'>
+<!--                     <table>
+                        <thead>
+                            <tr>
+                                <th class='search_name'>
+                                    Search Name
+                                </th>
+                                <th class='search_description'>
+                                    Search Description
+                                </th>
+                                <th>
+                                    Share
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class='search_name'>
+                                    Test Name
+                                </td>
+                                <td class='search_description'>
+                                    Test URLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLl
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                </div>
+                <!-- END favTable-scroll -->
+            </div>
+            <!-- END favTable-wrapper -->
+            <form action="/logout" method="post">
+                <input type="submit" value="Logout" class="btn btn-danger" id="logout">
+            </form>
+        </div>
+        <!-- END loginAndFavourites -->
+    </div>
+    <!-- END rightCol -->
+</body>
+
+</html>
